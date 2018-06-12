@@ -1,5 +1,5 @@
 <template>
-  <transition name="vc-acp">
+  <transition name="vc-acp" @after-leave="afterLeave">
     <div class="vc-acp" :class="className" v-show="show">
       <div class="vc-acp-header" v-if="title">
         <div class="vc-acp-title">{{ title }}</div>
@@ -11,8 +11,8 @@
         </div>
       </div>
       <div class="vc-acp-footer">
-        <button class="vc-acp-btn vc-acp-cancel" v-if="showCancelButton" @click="action(false)"> {{ cancelButtonText }}</button>
-        <button class="vc-acp-btn vc-acp-confirm" v-if="showConfirmButton" @click="action(true)"> {{ confirmButtonText }}</button>
+        <button class="vc-acp-btn vc-acp-cancel" v-if="showCancelButton" @click="__action(false)"> {{ cancelButtonText }}</button>
+        <button class="vc-acp-btn vc-acp-confirm" v-if="showConfirmButton" @click="__action(true)"> {{ confirmButtonText }}</button>
       </div>
     </div>
   </transition>
@@ -152,9 +152,11 @@ export default {
     }
   },
   methods: {
-    action (b) {
-      if(this.callback(b) !== false) {
-        this.show = false
+    afterLeave (el) {
+      const shouldDestroy = this.__afterLeave()
+      if (shouldDestroy) {
+        el.parentNode.removeChild(el)
+        this.$destroy()
       }
     }
   }

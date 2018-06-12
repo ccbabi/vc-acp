@@ -3,7 +3,7 @@ import acp from './acp'
 let Acp, instance, body, member
 
 const def = {
-  mask: false
+  mask: true
 }
 
 const acpDefault = {
@@ -24,12 +24,12 @@ const maskDefault = {}
 const acpQueue = []
 
 function merge (target) {
-  let i, j
+  let i, j, source, prop, value
   for (i = 1, j = arguments.length; i < j; i++) {
-    var source = arguments[i]
-    for (var prop in source) {
+    source = arguments[i]
+    for (prop in source) {
       if (source.hasOwnProperty(prop)) {
-        var value = source[prop]
+        value = source[prop]
         if (value !== undefined) {
           target[prop] = value
         }
@@ -37,7 +37,7 @@ function merge (target) {
     }
   }
   return target
-};
+}
 
 function $alert (message, callback, title) {
   return $acp({ message, title }, callback)
@@ -70,10 +70,13 @@ function $acp (callOption, callback) {
   }
 
   acpQueue.push({ option })
+
   instance.__show()
 }
 
 function __show () {
+  if (this.show) return
+
   member = acpQueue.shift()
 
   body.appendChild(this.$mount().$el)
@@ -96,15 +99,30 @@ function wrapCallback (action) {
   action ? member.resolve(value) : member.reject()
 }
 
+function __action (b) {
+  if (this.callback(b) !== false) {
+    this.show = false
+  }
+}
+
 function __setData (option) {
   Object.keys(acpDefault).forEach(prop => {
     instance[prop] = option[prop]
   })
 }
 
+function __afterLeave () {
+  if (acpQueue.length) {
+    instance.__show()
+    return false
+  }
+  instance = null
+  return true
+}
+
 function initAcp (Vue) {
   const Acp = Vue.extend(acp)
-  Object.assign(Acp.prototype, { __show, __setData })
+  Object.assign(Acp.prototype, { __show, __setData, __action, __afterLeave })
   return Acp
 }
 
