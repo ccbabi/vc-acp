@@ -1,13 +1,13 @@
 <template>
   <transition name="vc-acp" @after-leave="afterLeave">
-    <div class="vc-acp" :class="className" v-show="show">
+    <div class="vc-acp" :class="className" v-show="show" :style="{ zIndex }">
       <div class="vc-acp-header" v-if="title">
         <div class="vc-acp-title">{{ title }}</div>
       </div>
       <div class="vc-acp-body" v-if="message">
         <div class="vc-acp-message" v-html="message" />
         <div class="vc-acp-prompt" v-if="showInput">
-          <input class="vc-acp-input" v-model="value" :placeholder="placeholder" />
+          <input class="vc-acp-input" v-model="value" :placeholder="placeholder" ref="input" />
         </div>
       </div>
       <div class="vc-acp-footer">
@@ -21,6 +21,7 @@
 <style lang="less">
   .vc-acp {
     position: fixed;
+    z-index: 10001;
     top: 50%;
     left: 50%;
     transform: translate3d(-50%, -50%, 0);
@@ -28,6 +29,7 @@
     background: #fff;
     border-radius: 3px;
     overflow: hidden;
+    box-shadow: 0px 0px 2px #d0cfcf;
 
     &-header {
       padding: .5em;
@@ -77,6 +79,7 @@
       font-size: 16px;
       cursor: pointer;
       outline: none;
+      background-color: transparent;
     }
 
     &-confirm {
@@ -144,6 +147,10 @@ export default {
     callback: {
       type: Function,
       default: () => {}
+    },
+    zIndex: {
+      type: Number,
+      default: 10001
     }
   },
   data () {

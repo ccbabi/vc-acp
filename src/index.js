@@ -1,9 +1,11 @@
+import mask, { mapMask } from 'vc-mask'
 import acp from './acp'
 
 let Acp, instance, body, member
 
 const def = {
-  mask: true
+  mask: true,
+  maskClassName: ''
 }
 
 const acpDefault = {
@@ -16,10 +18,14 @@ const acpDefault = {
   cancelButtonText: '取消',
   confirmButtonText: '确定',
   showCancelButton: false,
-  showConfirmButton: true
+  showConfirmButton: true,
+  zIndex: 10001
 }
 
-const maskDefault = {}
+const maskDefault = {
+  enabledClickClose: false,
+  enabledEscClose: false
+}
 
 const acpQueue = []
 
@@ -70,19 +76,47 @@ function $acp (callOption, callback) {
   }
 
   acpQueue.push({ option })
-
   instance.__show()
 }
 
 function __show () {
-  if (this.show) return
+  let maskOption, option, value
+
+  if (this.show) return false
 
   member = acpQueue.shift()
+  option = member.option
 
   body.appendChild(this.$mount().$el)
 
-  this.__setData(member.option)
+  this.__setData(option)
   this.show = true
+
+  if (option.showInput) {
+    this.$nextTick(() => {
+      this.$refs.input.focus()
+    })
+  }
+  if (!option.mask) return false
+
+  maskOption = {}
+
+  Object.keys(maskDefault).forEach(prop => {
+    value = option[prop]
+    if (typeof value !== 'undefined') {
+      maskOption[prop] = value
+    }
+  })
+
+  if (option.maskClassName) {
+    maskOption.className = option.maskClassName
+  }
+
+  if (option.zIndex) {
+    maskOption.zIndex = option.zIndex - 1
+  }
+
+  return maskOption
 }
 
 function wrapCallback (action) {
@@ -93,7 +127,7 @@ function wrapCallback (action) {
   }
 
   if (member.callback) {
-    return member.callback(action, value)
+    return member.callback(action ? value : undefined)
   }
 
   action ? member.resolve(value) : member.reject()
@@ -101,7 +135,7 @@ function wrapCallback (action) {
 
 function __action (b) {
   if (this.callback(b) !== false) {
-    this.show = false
+    this.__close()
   }
 }
 
@@ -120,9 +154,22 @@ function __afterLeave () {
   return true
 }
 
+function __close () {
+  this.show = false
+}
+
 function initAcp (Vue) {
   const Acp = Vue.extend(acp)
-  Object.assign(Acp.prototype, { __show, __setData, __action, __afterLeave })
+  const maskOne = mapMask(maskDefault)
+
+  Object.assign(Acp.prototype, {
+    __show: maskOne.mapMaskOpen(__show),
+    __close: maskOne.mapMaskClose(__close),
+    __setData,
+    __action,
+    __afterLeave
+  })
+
   return Acp
 }
 
@@ -136,7 +183,7 @@ function init (Vue, useOption) {
   Acp = initAcp(Vue)
   Acp.useOption = useOption
 
-  return { $alert, $confirm, $prompt }
+  return { $acp, $alert, $confirm, $prompt }
 }
 
 function install (Vue, useOption) {
@@ -149,6 +196,8 @@ function install (Vue, useOption) {
   Object.keys(acp).forEach(key => {
     Vue[key] = Vue.prototype[key] = acp[key]
   })
+
+  Vue.use(mask)
 }
 
 export default { install }

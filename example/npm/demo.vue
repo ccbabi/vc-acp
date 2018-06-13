@@ -3,15 +3,15 @@
     <button @click="testAlert">alert</button>
     <button @click="testConfirm">confirm</button>
     <button @click="testPrompt">prompt</button>
+    <button @click="testAcp">acp</button>
   </div>
 </template>
-
-<style lang="less">
-  body {
-    background: #000;
-  }
+<style>
+button {
+  position: relative;
+  z-index: 10001;
+}
 </style>
-
 <script>
 export default {
   methods: {
@@ -28,10 +28,20 @@ export default {
       })
     },
     testPrompt () {
-      this.$prompt('请输入你的名字').then(val => {
+      this.$prompt('请输入你的名字：').then(val => {
         console.log(`点击了确认按钮：${val}`)
       }).catch(() => {
         console.log(`点击了取消按钮`)
+      })
+    },
+    testAcp () {
+      this.$acp({
+        message: '自定义配置',
+        mask: false,
+        zIndex: 30000,
+        showInput: true,
+      }, val => {
+        console.log(val)
       })
     }
   }
