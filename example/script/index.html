@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="../../dist/vc-acp.css">
+</head>
+<body>
+<div id="app">
+  <button @click="testAlert">alert</button>
+  <button @click="testConfirm">confirm</button>
+  <button @click="testPrompt">prompt</button>
+  <button @click="testAcp">acp</button>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script src="../../dist/vc-acp.js"></script>
+<script>
+  Vue.use(window['vc-acp'])
+  new Vue({
+    el: '#app',
+    methods: {
+      testAlert () {
+        this.$alert('欢迎使用我的组件').then(() => {
+          console.log('aaaa')
+        })
+      },
+      testConfirm () {
+        this.$confirm('确认删除吗？').then(() => {
+          console.log('点击了确认按钮')
+        }).catch(() => {
+          console.log('点击了取消按钮')
+        })
+      },
+      testPrompt () {
+        this.$prompt('请输入你的名字：').then(val => {
+          console.log(`点击了确认按钮：${val}`)
+        }).catch(() => {
+          console.log(`点击了取消按钮`)
+        })
+      },
+      testAcp () {
+        this.$acp({
+          message: '自定义配置',
+          mask: false,
+          zIndex: 30000,
+          showInput: true,
+        }, val => {
+          console.log(val)
+        })
+      }
+    }
+  })
+</script>
+</body>
+</html>

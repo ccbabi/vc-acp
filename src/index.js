@@ -1,5 +1,6 @@
 import mask, { mapMask } from 'vc-mask'
-import acp from './acp'
+import acp from './acp.vue'
+import './acp.less'
 
 let Acp, instance, body, member
 
