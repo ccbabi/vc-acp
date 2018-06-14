@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <link rel="stylesheet" href="../../dist/vc-acp.css">
+  <link rel="stylesheet" href="../../node_modules/vc-mask/dist/css/vc-mask.css">
+  <link rel="stylesheet" href="../../dist/css/vc-acp.css">
 </head>
 <body>
 <div id="app">
@@ -46,8 +47,8 @@
           mask: false,
           zIndex: 30000,
           showInput: true,
-        }, val => {
-          console.log(val)
+        }, (action, val) => {
+          console.log(action, val)
         })
       }
     }

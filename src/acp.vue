@@ -11,8 +11,8 @@
         </div>
       </div>
       <div class="vc-acp-footer">
-        <button class="vc-acp-btn vc-acp-cancel" v-if="showCancelButton" @click="__action(false)"> {{ cancelButtonText }}</button>
-        <button class="vc-acp-btn vc-acp-confirm" v-if="showConfirmButton" @click="__action(true)"> {{ confirmButtonText }}</button>
+        <a href="javascript:;" class="vc-acp-btn vc-acp-cancel" v-if="showCancelButton" @click="__action(false)"> {{ cancelButtonText }}</a>
+        <a href="javascript:;" class="vc-acp-btn vc-acp-confirm" v-if="showConfirmButton" @click="__action(true)"> {{ confirmButtonText }}</a>
       </div>
     </div>
   </transition>

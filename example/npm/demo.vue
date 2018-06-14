@@ -40,8 +40,8 @@ export default {
         mask: false,
         zIndex: 30000,
         showInput: true,
-      }, val => {
-        console.log(val)
+      }, (action, val) => {
+        console.log(action, val)
       })
     }
   }

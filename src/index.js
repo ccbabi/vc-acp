@@ -1,6 +1,5 @@
 import mask, { mapMask } from 'vc-mask'
 import acp from './acp.vue'
-import './acp.less'
 
 let Acp, instance, body, member
 
@@ -128,7 +127,7 @@ function wrapCallback (action) {
   }
 
   if (member.callback) {
-    return member.callback(action ? value : undefined)
+    return member.callback(action, value)
   }
 
   action ? member.resolve(value) : member.reject()
