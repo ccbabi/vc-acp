@@ -1,6 +1,6 @@
 {
   "name": "vc-acp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Implement non-blocking alert, confirm, prompt components via vue",
   "main": "dist/vc-acp.js",
   "module": "dist/vc-acp.es.js",
